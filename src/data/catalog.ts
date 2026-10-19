@@ -25,6 +25,9 @@ export interface Brand {
   name: string;
   country: string;
   description: string;
+  /** Färger för den ritade förpackningen när produktbild saknas */
+  color: string;
+  accent: string;
 }
 
 export interface Product {
@@ -56,6 +59,9 @@ export interface Product {
   addedDate: string;
   /** Valfritt filnamn i assets/products om bilden inte heter som artikelnumret */
   image?: string;
+  /** Egna färger på den ritade förpackningen, annars används märkets */
+  packColor?: string;
+  packAccent?: string;
 }
 
 export const categories: Category[] = [
@@ -92,19 +98,19 @@ export const categories: Category[] = [
 ];
 
 export const brands: Brand[] = [
-  { slug: "goya", name: "Goya", country: "USA", description: "Ett av de största märkena för latinamerikansk mat, med bönor, kryddor och konserver." },
-  { slug: "calnort", name: "CalNort", country: "Colombia", description: "Buljong och smaksättning för vardagsmat i det colombianska köket." },
-  { slug: "coexito", name: "Coexito", country: "Colombia", description: "Colombianska såser och dressingar som många kunder frågar efter." },
-  { slug: "postobon", name: "Postobón", country: "Colombia", description: "Colombias klassiska läskmärke med smaker som äpple och kola." },
-  { slug: "saltin-noel", name: "Saltín Noel", country: "Colombia", description: "Salta kex som är en självklarhet i varje colombianskt skafferi." },
-  { slug: "ducales", name: "Ducales", country: "Colombia", description: "Smöriga, lätt salta kex som passar till kaffe och pålägg." },
-  { slug: "festival", name: "Festival", country: "Colombia", description: "Fyllda kex i portionsförpackningar, populära i kassalinjen." },
-  { slug: "colombina", name: "Colombina", country: "Colombia", description: "Klubbor och karameller som säljs i över 70 länder." },
-  { slug: "jet", name: "Jet", country: "Colombia", description: "Mjölkchoklad i små bitar, ofta med samlarkort." },
-  { slug: "dr-pepper", name: "Dr Pepper", country: "USA", description: "Den amerikanska läsken med 23 smaker, i burk." },
-  { slug: "a-and-w", name: "A&W", country: "USA", description: "Root beer och cream soda med lång amerikansk historia." },
-  { slug: "monster", name: "Monster", country: "USA", description: "Energidryck i stor burk med många smaker och sockerfria varianter." },
-  { slug: "arizona", name: "Arizona", country: "USA", description: "Iste och fruktdrycker i de karaktäristiska burkarna." },
+  { slug: "goya", name: "Goya", country: "USA", description: "Ett av de största märkena för latinamerikansk mat, med bönor, kryddor och konserver.", color: "#0b4da2", accent: "#ffcf1f" },
+  { slug: "calnort", name: "CalNort", country: "Colombia", description: "Buljong och smaksättning för vardagsmat i det colombianska köket.", color: "#d7262f", accent: "#ffd23f" },
+  { slug: "coexito", name: "Coexito", country: "Colombia", description: "Colombianska såser och dressingar som många kunder frågar efter.", color: "#c8102e", accent: "#ffffff" },
+  { slug: "postobon", name: "Postobón", country: "Colombia", description: "Colombias klassiska läskmärke med smaker som äpple och kola.", color: "#d52b1e", accent: "#ffd23f" },
+  { slug: "saltin-noel", name: "Saltín Noel", country: "Colombia", description: "Salta kex som är en självklarhet i varje colombianskt skafferi.", color: "#e30613", accent: "#ffd100" },
+  { slug: "ducales", name: "Ducales", country: "Colombia", description: "Smöriga, lätt salta kex som passar till kaffe och pålägg.", color: "#8e1b2a", accent: "#f3d9a4" },
+  { slug: "festival", name: "Festival", country: "Colombia", description: "Fyllda kex i portionsförpackningar, populära i kassalinjen.", color: "#5b2c1e", accent: "#ff7ab6" },
+  { slug: "colombina", name: "Colombina", country: "Colombia", description: "Klubbor och karameller som säljs i över 70 länder.", color: "#e2001a", accent: "#ffd400" },
+  { slug: "jet", name: "Jet", country: "Colombia", description: "Mjölkchoklad i små bitar, ofta med samlarkort.", color: "#0033a0", accent: "#e4002b" },
+  { slug: "dr-pepper", name: "Dr Pepper", country: "USA", description: "Den amerikanska läsken med 23 smaker, i burk.", color: "#6e0f2d", accent: "#ffffff" },
+  { slug: "a-and-w", name: "A&W", country: "USA", description: "Root beer och cream soda med lång amerikansk historia.", color: "#f28c28", accent: "#5a2d0c" },
+  { slug: "monster", name: "Monster", country: "USA", description: "Energidryck i stor burk med många smaker och sockerfria varianter.", color: "#121212", accent: "#7ac943" },
+  { slug: "arizona", name: "Arizona", country: "USA", description: "Iste och fruktdrycker i de karaktäristiska burkarna.", color: "#3cb4a0", accent: "#f7c6d9" },
 ];
 
 /** Räknar fram kontrollsiffran så att EAN-13 blir giltig. */
@@ -142,6 +148,8 @@ export const products: Product[] = [
   },
   {
     articleNo: "10102",
+    packColor: "#8a0f3c",
+    packAccent: "#ffffff",
     slug: "dr-pepper-cherry-355-ml",
     ean: ean("007845600102"),
     name: "Dr Pepper Cherry",
@@ -188,6 +196,8 @@ export const products: Product[] = [
   },
   {
     articleNo: "10104",
+    packColor: "#f6c25b",
+    packAccent: "#5a2d0c",
     slug: "a-and-w-cream-soda-355-ml",
     ean: ean("007845600104"),
     name: "A&W Cream Soda",
@@ -234,6 +244,8 @@ export const products: Product[] = [
   },
   {
     articleNo: "10106",
+    packColor: "#eef1f4",
+    packAccent: "#9aa6b2",
     slug: "monster-energy-ultra-white-500-ml",
     ean: ean("507019300106"),
     name: "Monster Energy Ultra White",
@@ -257,6 +269,8 @@ export const products: Product[] = [
   },
   {
     articleNo: "10107",
+    packColor: "#24b3c6",
+    packAccent: "#ff9f1c",
     slug: "monster-energy-mango-loco-500-ml",
     ean: ean("507019300107"),
     name: "Monster Energy Mango Loco",
@@ -303,6 +317,8 @@ export const products: Product[] = [
   },
   {
     articleNo: "10109",
+    packColor: "#ffb000",
+    packAccent: "#e2006a",
     slug: "arizona-mucho-mango-500-ml",
     ean: ean("061300800109"),
     name: "Arizona Mucho Mango",
@@ -326,6 +342,8 @@ export const products: Product[] = [
   },
   {
     articleNo: "10110",
+    packColor: "#2e9d3a",
+    packAccent: "#ffffff",
     slug: "postobon-manzana-400-ml",
     ean: ean("770217000110"),
     name: "Postobón Manzana",
@@ -348,6 +366,8 @@ export const products: Product[] = [
   },
   {
     articleNo: "10111",
+    packColor: "#e94e1b",
+    packAccent: "#ffd23f",
     slug: "postobon-colombiana-400-ml",
     ean: ean("770217000111"),
     name: "Postobón Colombiana",
@@ -464,6 +484,8 @@ export const products: Product[] = [
   },
   {
     articleNo: "20105",
+    packColor: "#1a7f37",
+    packAccent: "#ffcf1f",
     slug: "goya-kokbananchips-85-g",
     ean: ean("004133100205"),
     name: "Goya Kokbananchips",
@@ -694,6 +716,8 @@ export const products: Product[] = [
   },
   {
     articleNo: "40103",
+    packColor: "#ffffff",
+    packAccent: "#0b4da2",
     slug: "goya-masarepa-vit-majsmjol-1-kg",
     ean: ean("004133100403"),
     name: "Goya Masarepa vitt majsmjöl",
@@ -739,6 +763,8 @@ export const products: Product[] = [
   },
   {
     articleNo: "40105",
+    packColor: "#ffffff",
+    packAccent: "#0b4da2",
     slug: "goya-kokosmjolk-400-ml",
     ean: ean("004133100405"),
     name: "Goya Kokosmjölk",
@@ -809,6 +835,8 @@ export const products: Product[] = [
   },
   {
     articleNo: "50103",
+    packColor: "#4e2a14",
+    packAccent: "#ffd400",
     slug: "colombina-kaffekola-150-g",
     ean: ean("770224700503"),
     name: "Colombina Kaffekola",
@@ -832,6 +860,8 @@ export const products: Product[] = [
   },
   {
     articleNo: "50104",
+    packColor: "#c2185b",
+    packAccent: "#ffcf1f",
     slug: "goya-guavapasta-595-g",
     ean: ean("004133100504"),
     name: "Goya Guavapasta",
@@ -855,6 +885,8 @@ export const products: Product[] = [
   },
   {
     articleNo: "50105",
+    packColor: "#7a4a1f",
+    packAccent: "#ffffff",
     slug: "colombina-super-coco-250-g",
     ean: ean("770224700505"),
     name: "Colombina Super Coco",

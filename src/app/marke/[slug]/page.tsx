@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductListing } from "@/components/ProductListing";
-import { BrandMark } from "@/components/home/BrandRow";
+import { BrandMark } from "@/components/BrandMark";
 import { brands, getBrand, productsByBrand } from "@/data/catalog";
 
 export function generateStaticParams() {

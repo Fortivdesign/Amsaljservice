@@ -13,6 +13,13 @@ export function Footer() {
 
   return (
     <footer className="mt-20 bg-ink text-white/75 md:mt-28">
+      <div className="grid h-2 grid-cols-5" aria-hidden>
+        <span className="bg-brand" />
+        <span className="bg-sun" />
+        <span className="bg-tangerine" />
+        <span className="bg-teal" />
+        <span className="bg-leaf" />
+      </div>
       <div className="container-page grid grid-cols-1 gap-10 py-14 md:grid-cols-2 lg:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,1fr))] lg:gap-12">
         <div>
           <div className="h-20">

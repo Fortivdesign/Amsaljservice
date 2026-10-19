@@ -36,7 +36,7 @@ export function ProductImage({
           // eslint-disable-next-line @next/next/no-img-element
           <img src={url} alt={product.name} loading="lazy" className="h-full w-full object-contain mix-blend-multiply" />
         ) : (
-          <PackPlaceholder shape={product.shape} label={brand?.name} className="h-full w-full" />
+          <PackPlaceholder shape={product.shape} label={brand?.name} color={product.packColor ?? brand?.color} accent={product.packAccent ?? brand?.accent} className="h-full w-full" />
         )}
       </div>
     </div>

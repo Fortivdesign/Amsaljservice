@@ -146,6 +146,12 @@ async function runDevice(browser, device) {
     acceptDownloads: true,
   });
   context.setDefaultTimeout(30000);
+  // Popupen och sök-rutan stängs av i huvudflödet så att de inte skymmer bilderna
+  await context.addInitScript(() => {
+    try {
+      window.localStorage.setItem("am-popup-off", "1");
+    } catch {}
+  });
   const page = await context.newPage();
   const errors = [];
   page.on("pageerror", (e) => errors.push(String(e)));
@@ -217,7 +223,7 @@ async function runDevice(browser, device) {
   // 06 Startsida inloggad
   await page.getByTestId("login-submit").click();
   await page.waitForURL((url) => url.pathname === "/");
-  await page.getByText("Välkommen tillbaka").waitFor();
+  await page.getByText("Hej Maria").waitFor();
   await shot("06-startsida-inloggad");
 
   // 07 Kategori med priser, och lägg några kartonger i varukorgen
@@ -319,6 +325,35 @@ async function runDevice(browser, device) {
     console.warn(`\n  Fel i sidan (${device.name}):\n  ${errors.join("\n  ")}`);
   }
   await context.close();
+
+  // 18 och 19: popupen och sök-rutan, i ett nytt fönster som ny besökare
+  const extra = await browser.newContext({
+    viewport: device.viewport,
+    deviceScaleFactor: device.deviceScaleFactor,
+    isMobile: device.isMobile,
+    hasTouch: device.hasTouch,
+    locale: "sv-SE",
+    timezoneId: "Europe/Stockholm",
+    reducedMotion: "reduce",
+  });
+  extra.setDefaultTimeout(30000);
+  const p2 = await extra.newPage();
+  const shot2 = async (file) => {
+    await settle(p2, 700);
+    await p2.screenshot({ path: join(dir, `${file}.png`) });
+    console.log(`  ${device.name}: ${file}`);
+  };
+  await p2.goto(`${baseUrl}/?popup=visa`);
+  await p2.getByTestId("welcome-popup").waitFor();
+  await shot2("18-popup-rabatt");
+  await p2.keyboard.press("Escape");
+  await p2.goto(`${baseUrl}/kategori/dryck`);
+  const search2 = p2.locator('input[type="search"]:visible').first();
+  await search2.click();
+  await search2.fill("goya");
+  await p2.getByTestId("search-nudge").waitFor();
+  await shot2("19-sok-kampanj");
+  await extra.close();
 }
 
 const server = await startServerIfNeeded();

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { BrandMark } from "@/components/home/BrandRow";
+import { BrandMark } from "@/components/BrandMark";
 import { brands, productsByBrand } from "@/data/catalog";
 
 export const metadata: Metadata = { title: "Märken" };

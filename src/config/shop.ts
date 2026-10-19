@@ -61,8 +61,54 @@ export const shopConfig = {
     },
   ],
 
-  /** Accentfärg från AM Säljservice nuvarande profil (terrakotta). */
-  brandColor: "#BF4E29",
+  /** Färgen på köpknappar och kampanjer (bougainvillearosa). */
+  brandColor: "#E5197E",
+
+  /** Order lagd före denna tid en vardag räknas som dagens order */
+  orderCutoff: { hour: 14, minute: 0 },
+
+  /** Kampanjen som syns i den rosa raden och på startsidan */
+  campaign: {
+    title: "Fiesta-veckan",
+    text: "Upp till 13 % rabatt på Arizona, Postobón och Goya",
+    /** Kampanjen tar slut söndag 23.59 varje vecka i prototypen */
+    endsWeekday: 0,
+  },
+
+  /** Erbjudandet i popupen för nya besökare */
+  welcomeOffer: {
+    percent: 10,
+    code: "FIESTA10",
+    /** Sekunder på sajten innan popupen visas */
+    delaySeconds: 12,
+  },
+
+  /**
+   * Socialt bevis. EXEMPELTEXT i prototypen, byt mot riktiga siffror
+   * och riktiga omdömen innan något publiceras.
+   */
+  socialProof: {
+    rating: 4.8,
+    reviewCount: 214,
+    storeCount: "350",
+    reviews: [
+      {
+        name: "Lina, Tienda Sol Livs",
+        city: "Södertälje",
+        text: "Beställer på söndag kväll och har varorna i butiken på tisdag. Kunderna frågar efter Postobón och Saltín Noel varje dag.",
+      },
+      {
+        name: "Ahmed, Kvarterslivs",
+        city: "Malmö",
+        text: "Äntligen en grossist där jag ser alla priser per kartong och per styck direkt. Snabbbeställningen sparar mig en timme i veckan.",
+      },
+      {
+        name: "Camila, Sabor Latino",
+        city: "Göteborg",
+        text: "Bästa sortimentet av colombianska varor jag hittat i Sverige. Faktura på 30 dagar gör det lätt att fylla på inför helgen.",
+      },
+    ],
+  },
 
   /** Kontaktuppgifter i sidfoten (påhittade, byt till riktiga) */
   contact: {

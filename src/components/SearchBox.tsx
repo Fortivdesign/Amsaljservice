@@ -30,6 +30,16 @@ export function SearchBox({ className = "", autoFocus = false, onNavigate }: { c
     return q ? categories.filter((c) => normalize(c.name).includes(q)) : [];
   }, [query]);
 
+  // Berätta för sök-nudgen vad besökaren letar efter (efter en kort paus i skrivandet)
+  useEffect(() => {
+    const q = query.trim();
+    if (q.length < 3) return;
+    const id = window.setTimeout(() => {
+      window.dispatchEvent(new CustomEvent("am:search", { detail: { query: q, hits: searchProducts(q).length } }));
+    }, 700);
+    return () => window.clearTimeout(id);
+  }, [query]);
+
   useEffect(() => {
     const onDown = (e: MouseEvent) => {
       if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
@@ -81,7 +91,7 @@ export function SearchBox({ className = "", autoFocus = false, onNavigate }: { c
           placeholder="Sök produkt, märke eller artikelnummer"
           aria-controls={listId}
           aria-expanded={open}
-          className="h-11 w-full rounded-full border border-transparent bg-sand pr-10 pl-11 text-[15px] text-ink outline-none transition-colors placeholder:text-muted focus:border-line-strong focus:bg-white [&::-webkit-search-cancel-button]:hidden"
+          className="h-11 w-full rounded-full border-2 border-transparent bg-sand pr-10 pl-11 text-[15px] text-ink outline-none transition-colors placeholder:text-muted focus:border-ink focus:bg-white [&::-webkit-search-cancel-button]:hidden"
         />
         {hasQuery && (
           <button

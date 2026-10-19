@@ -17,7 +17,7 @@ export function PriceBlock({ product, size = "md" }: { product: Product; size?: 
   return (
     <div>
       <div className="flex flex-wrap items-baseline gap-x-2">
-        <span className={`font-display font-semibold tracking-tight tabular-nums ${product.offerPrice ? "text-brand" : "text-ink"} ${size === "lg" ? "text-3xl" : "text-[19px]"}`}>
+        <span className={`font-poster tracking-wide tabular-nums ${product.offerPrice ? "text-brand" : "text-ink"} ${size === "lg" ? "text-4xl" : "text-[22px] leading-tight"}`}>
           {formatPrice(price)}
         </span>
         <span className="text-xs text-muted">/krt</span>
@@ -34,7 +34,7 @@ export function LoginForPrice({ className = "" }: { className?: string }) {
   return (
     <Link
       href="/logga-in"
-      className={`flex items-center justify-center gap-1.5 rounded-xl bg-sand px-2.5 py-2.5 text-center text-[12.5px] leading-snug font-semibold text-ink transition-colors hover:bg-cream ${className}`}
+      className={`flex items-center justify-center gap-1.5 rounded-xl bg-sun px-2.5 py-2.5 text-center text-[12.5px] leading-snug font-bold text-ink transition-colors hover:bg-ink hover:text-sun ${className}`}
     >
       <Lock className="size-3.5 shrink-0" strokeWidth={2.2} />
       Logga in för att se pris
@@ -42,7 +42,7 @@ export function LoginForPrice({ className = "" }: { className?: string }) {
   );
 }
 
-export function ProductCard({ product, className = "" }: { product: Product; className?: string }) {
+export function ProductCard({ product, className = "", rank }: { product: Product; className?: string; rank?: number }) {
   const { user, hydrated, addToCart } = useShop();
   const [qty, setQty] = useState(1);
   const brand = getBrand(product.brand);
@@ -50,20 +50,20 @@ export function ProductCard({ product, className = "" }: { product: Product; cla
 
   return (
     <article
-      className={`group @container relative flex h-full flex-col rounded-2xl border border-line bg-white p-2.5 transition-shadow duration-200 hover:shadow-soft sm:p-3 ${className}`}
+      className={`group @container relative flex h-full flex-col rounded-3xl border-2 border-line bg-white p-2.5 transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-ink hover:shadow-pop sm:p-3 ${className}`}
       data-testid="product-card"
     >
       <Link href={`/produkt/${product.slug}`} className="relative block" tabIndex={-1} aria-hidden>
-        <ProductImage product={product} />
-        <ProductBadges product={product} className="absolute top-2 left-2" />
+        <ProductImage product={product} rounded="rounded-2xl" />
+        <ProductBadges product={product} rank={rank} className="absolute top-2 left-2" />
       </Link>
       <FavoriteButton articleNo={product.articleNo} className="absolute top-4 right-4 sm:top-5 sm:right-5" />
 
       <div className="mt-3 flex flex-1 flex-col px-0.5">
-        <Link href={`/marke/${brand?.slug}`} className="text-[11px] font-semibold tracking-[0.08em] text-muted uppercase hover:text-ink">
+        <Link href={`/marke/${brand?.slug}`} className="text-[11px] font-bold tracking-[0.08em] text-brand uppercase hover:text-ink">
           {brand?.name}
         </Link>
-        <h3 className="mt-0.5 font-sans text-[15px] leading-snug font-semibold tracking-normal">
+        <h3 className="mt-0.5 font-sans text-[15px] leading-snug font-bold tracking-normal">
           <Link href={`/produkt/${product.slug}`} className="line-clamp-2 hover:underline hover:decoration-line-strong hover:underline-offset-4">
             {product.name}
           </Link>
@@ -75,7 +75,12 @@ export function ProductCard({ product, className = "" }: { product: Product; cla
           {!hydrated ? (
             <div className="h-[42px] rounded-xl bg-sand" />
           ) : !user ? (
-            <LoginForPrice />
+            <div>
+              {product.offerPrice ? (
+                <p className="mb-2 text-xs font-bold text-brand">Kampanjpris, spara {Math.round((1 - product.offerPrice / product.price) * 100)} %</p>
+              ) : null}
+              <LoginForPrice />
+            </div>
           ) : (
             <div>
               <PriceBlock product={product} />

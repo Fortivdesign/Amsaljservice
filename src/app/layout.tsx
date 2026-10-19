@@ -2,10 +2,12 @@ import type { Metadata, Viewport } from "next";
 import type { CSSProperties } from "react";
 import "@fontsource-variable/outfit";
 import "@fontsource-variable/dm-sans";
+import "@fontsource/anton";
 import "./globals.css";
 import { shopConfig } from "@/config/shop";
 import { ShopProvider } from "@/context/ShopContext";
-import { TopBar } from "@/components/TopBar";
+import { CampaignBar } from "@/components/CampaignBar";
+import { ConversionLayer } from "@/components/conversion/ConversionLayer";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
@@ -21,7 +23,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#2b211a",
+  themeColor: "#1c1230",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -29,12 +31,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="sv" style={{ "--brand": shopConfig.brandColor } as CSSProperties}>
       <body className="flex min-h-dvh flex-col">
         <ShopProvider>
-          <TopBar />
           <Header />
+          <CampaignBar />
           <main className="flex-1">{children}</main>
           <Footer />
           <CartDrawer />
           <Toaster />
+          <ConversionLayer />
         </ShopProvider>
       </body>
     </html>

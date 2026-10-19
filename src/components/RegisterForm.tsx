@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, type ReactNode } from "react";
-import { BadgeCheck, Check, Eye, EyeOff, FileText, Tag, Truck, UserRound } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
+import { BadgeCheck, Check, Eye, EyeOff, FileText, Sparkles, Tag, Truck, UserRound } from "lucide-react";
 import { useShop } from "@/context/ShopContext";
 import { shopConfig } from "@/config/shop";
 import { Breadcrumbs } from "./Breadcrumbs";
@@ -18,6 +18,7 @@ function Field({
   required = true,
   className = "",
   inputMode,
+  defaultValue,
 }: {
   label: string;
   name: string;
@@ -28,6 +29,7 @@ function Field({
   required?: boolean;
   className?: string;
   inputMode?: "text" | "numeric" | "tel" | "email";
+  defaultValue?: string;
 }) {
   return (
     <div className={className}>
@@ -35,7 +37,17 @@ function Field({
         {label}
         {!required && <span className="font-normal text-muted"> (valfritt)</span>}
       </label>
-      <input id={name} name={name} type={type} placeholder={placeholder} autoComplete={autoComplete} required={required} inputMode={inputMode} className="field" />
+      <input
+        id={name}
+        name={name}
+        type={type}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+        required={required}
+        inputMode={inputMode}
+        defaultValue={defaultValue}
+        className="field"
+      />
       {hint && <p className="field-hint">{hint}</p>}
     </div>
   );
@@ -69,6 +81,14 @@ export function RegisterForm() {
   const [otherDelivery, setOtherDelivery] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [sending, setSending] = useState(false);
+  const [offer, setOffer] = useState<{ code: string; email: string } | null>(null);
+
+  // Rabattkod och e-post från välkomstpopupen
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("rabatt");
+    if (code) setOffer({ code, email: params.get("epost") ?? "" });
+  }, []);
 
   return (
     <div className="container-page pt-5 md:pt-8">
@@ -81,7 +101,17 @@ export function RegisterForm() {
             Fyll i uppgifterna om ditt företag. Vi granskar ansökan och öppnar kontot, oftast inom en arbetsdag.
           </p>
 
+          {offer && (
+            <div className="mt-6 flex items-center gap-3 rounded-2xl bg-sun px-5 py-4 text-ink" data-testid="offer-banner">
+              <Sparkles className="size-5 shrink-0" />
+              <p className="text-sm">
+                <span className="font-bold">{shopConfig.welcomeOffer.percent} % rabatt på första ordern är reserverad åt dig.</span> Koden {offer.code} skickas när kontot
+                är godkänt.
+              </p>
+            </div>
+          )}
           <form
+            key={offer?.email ?? "form"}
             className="card mt-8 space-y-7 p-5 sm:p-8"
             onSubmit={(e) => {
               e.preventDefault();
@@ -103,7 +133,15 @@ export function RegisterForm() {
 
             <Section step={2} title="Kontaktperson">
               <Field label="Namn" name="contact" placeholder="För- och efternamn" autoComplete="name" className="sm:col-span-2" />
-              <Field label="E-post" name="email" type="email" placeholder="namn@foretag.se" autoComplete="email" hint="Används för inloggning och orderbekräftelser" />
+              <Field
+                label="E-post"
+                name="email"
+                type="email"
+                placeholder="namn@foretag.se"
+                autoComplete="email"
+                hint="Används för inloggning och orderbekräftelser"
+                defaultValue={offer?.email}
+              />
               <Field label="Mobilnummer" name="phone" type="tel" placeholder="070 123 45 67" autoComplete="tel" />
             </Section>
 

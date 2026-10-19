@@ -4,40 +4,60 @@
  * Färger. --brand sätts från src/config/shop.ts (brandColor) i layout.tsx,
  * värdet här är bara en reserv.
  */
+/*
+ * Färger. --brand sätts från src/config/shop.ts (brandColor) i layout.tsx,
+ * värdet här är bara en reserv. Paletten är hämtad från färgerna i en
+ * kolonial gata i Latinamerika: rosa, sol, apelsin, petrol och djup aubergine.
+ */
 :root {
-  --brand: #bf4e29;
+  --brand: #e5197e;
 }
 
 @theme inline {
   --color-brand: var(--brand);
-  --color-brand-dark: color-mix(in oklab, var(--brand) 84%, black);
-  --color-brand-50: color-mix(in oklab, var(--brand) 6%, white);
-  --color-brand-100: color-mix(in oklab, var(--brand) 12%, white);
-  --color-brand-200: color-mix(in oklab, var(--brand) 24%, white);
+  --color-brand-dark: color-mix(in oklab, var(--brand) 82%, black);
+  --color-brand-50: color-mix(in oklab, var(--brand) 7%, white);
+  --color-brand-100: color-mix(in oklab, var(--brand) 14%, white);
+  --color-brand-200: color-mix(in oklab, var(--brand) 28%, white);
 
-  --color-ink: #2b211a;
-  --color-ink-soft: #54483f;
-  --color-muted: #857a70;
-  --color-line: #ebe5dd;
-  --color-line-strong: #ddd5ca;
-  --color-sand: #f8f5f0;
-  --color-cream: #f4ece2;
+  /* Fiesta-paletten */
+  --color-sun: #ffc23d;
+  --color-sun-light: #fff1c9;
+  --color-tangerine: #f26a21;
+  --color-tangerine-light: #ffe3d1;
+  --color-teal: #0e8a8f;
+  --color-teal-light: #d4f1ef;
+  --color-leaf: #17a35a;
+  --color-leaf-light: #dcf5e6;
+  --color-violet: #6a2ee0;
+  --color-violet-light: #ebe2ff;
+  --color-rose-light: #ffe0ef;
+
+  --color-ink: #1c1230;
+  --color-ink-soft: #4a4060;
+  --color-muted: #7b7390;
+  --color-line: #ece7f1;
+  --color-line-strong: #dcd5e6;
+  --color-sand: #f7f4fa;
+  --color-cream: #fff5e6;
   /* Bakgrund bakom alla produktbilder */
-  --color-canvas: #f3f0eb;
+  --color-canvas: #fbf6ef;
 
-  --color-success: #2f7a4f;
-  --color-success-50: #ebf5ef;
-  --color-warning: #a76a10;
-  --color-warning-50: #fbf2e2;
-  --color-info: #3a5f8f;
-  --color-info-50: #edf2f9;
-  --color-danger: #b4372b;
+  --color-success: #17a35a;
+  --color-success-50: #e3f7ec;
+  --color-warning: #c36a00;
+  --color-warning-50: #fff1dc;
+  --color-info: #3a4fd0;
+  --color-info-50: #ebeeff;
+  --color-danger: #d42a2a;
 
   --font-sans: "DM Sans Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display: "Outfit Variable", "DM Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-poster: "Anton", "Outfit Variable", Impact, ui-sans-serif, sans-serif;
 
-  --shadow-soft: 0 1px 2px rgb(43 33 26 / 0.04), 0 8px 24px rgb(43 33 26 / 0.06);
-  --shadow-lift: 0 2px 4px rgb(43 33 26 / 0.04), 0 16px 40px rgb(43 33 26 / 0.1);
+  --shadow-soft: 0 1px 2px rgb(28 18 48 / 0.05), 0 8px 24px rgb(28 18 48 / 0.08);
+  --shadow-lift: 0 2px 4px rgb(28 18 48 / 0.06), 0 18px 44px rgb(28 18 48 / 0.16);
+  --shadow-pop: 4px 4px 0 0 rgb(28 18 48);
 }
 
 @layer base {
@@ -53,7 +73,8 @@
   h2,
   h3,
   h4 {
-    @apply font-display tracking-tight text-ink;
+    @apply font-display tracking-tight;
+    color: inherit;
   }
   ::selection {
     background: color-mix(in oklab, var(--brand) 22%, white);
@@ -187,6 +208,41 @@
     opacity: 1;
   }
 }
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes pop-in {
+  from {
+    transform: scale(0.94) translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes slide-in-up {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.animate-marquee {
+  animation: marquee 38s linear infinite;
+}
+.animate-pop-in {
+  animation: pop-in 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-slide-in-up {
+  animation: slide-in-up 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
 .animate-fade-in {
   animation: fade-in 180ms ease-out both;
 }
@@ -201,6 +257,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none !important;
+  }
   *,
   *::before,
   *::after {

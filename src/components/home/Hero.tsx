@@ -1,120 +1,158 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
-import manifest from "@/data/asset-manifest.json";
+import { ArrowRight, Check, Star, Truck } from "lucide-react";
 import { useShop } from "@/context/ShopContext";
-import { getBrand, getProduct, packLabel, products } from "@/data/catalog";
 import { shopConfig } from "@/config/shop";
-import { formatPrice } from "@/lib/format";
-import { currentPrice } from "@/data/catalog";
-import { orderStatusLabel } from "@/data/account";
+import { currentPrice, discountPercent, getProduct, packLabel } from "@/data/catalog";
+import { formatPrice, formatWeekday } from "@/lib/format";
+import { campaignEnd, deliveryDateIfOrderedNow, nextCutoff, splitDuration } from "@/lib/time";
 import { ProductImage } from "../ProductImage";
-import { PackPlaceholder } from "../PackPlaceholder";
+import { Countdown } from "../CampaignBar";
+import { useNow } from "../useNow";
 
-function HeroVisual() {
-  if (manifest.hero) {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img src={manifest.hero} alt="Hylla med läsk i en butik" className="absolute inset-0 h-full w-full object-cover object-[center_40%]" />;
-  }
-  // Reserv om ingen bild finns i assets: ett lugnt "hyllmotiv" av platshållare
-  const picks = products.filter((p) => p.topSeller).slice(0, 6);
+/** "Beställ inom 3 tim 12 min så levereras det torsdag 22 oktober" */
+export function DeliveryPromise({ className = "", tone = "light" }: { className?: string; tone?: "light" | "dark" }) {
+  const now = useNow(30000);
+  if (!now) return <p className={`h-6 ${className}`} />;
+  const left = splitDuration(nextCutoff(now).getTime() - now.getTime());
+  const wait = left.days > 0 ? `${left.days} d ${left.hours} tim` : `${left.hours} tim ${left.minutes} min`;
   return (
-    <div className="absolute inset-0 grid grid-cols-3 content-center gap-4 bg-cream p-8">
-      {picks.map((p) => (
-        <div key={p.articleNo} className="rounded-2xl bg-white/60 p-3">
-          <PackPlaceholder shape={p.shape} label={getBrand(p.brand)?.name} />
+    <p className={`flex items-center gap-2 text-sm ${tone === "light" ? "text-white/90" : "text-ink-soft"} ${className}`} data-testid="delivery-promise">
+      <Truck className={`size-[18px] shrink-0 ${tone === "light" ? "text-sun" : "text-teal"}`} strokeWidth={2.2} />
+      <span>
+        Beställ inom <span className={`font-bold ${tone === "light" ? "text-sun" : "text-ink"}`}>{wait}</span>, leverans{" "}
+        <span className="font-bold">{formatWeekday(deliveryDateIfOrderedNow(now))}</span>
+      </span>
+    </p>
+  );
+}
+
+function DealCard() {
+  const { user, hydrated } = useShop();
+  const now = useNow();
+  const deal = getProduct("10111")!;
+  const pct = discountPercent(deal);
+  return (
+    <Link
+      href={`/produkt/${deal.slug}`}
+      className="group absolute right-6 bottom-8 hidden w-[290px] rotate-2 rounded-[28px] bg-white p-4 shadow-lift transition-transform hover:rotate-0 lg:block xl:right-[max(1.5rem,calc((100vw-1280px)/2+2rem))]"
+      data-testid="hero-deal"
+    >
+      <span className="absolute -top-4 -left-4 grid size-20 -rotate-12 place-items-center rounded-full bg-sun text-center font-poster text-lg leading-[0.95] text-ink uppercase shadow-[3px_3px_0_0_rgb(28_18_48)]">
+        Spara
+        <br />
+        {pct} %
+      </span>
+      <p className="text-right text-[11px] font-bold tracking-[0.14em] text-brand uppercase">Veckans deal</p>
+      <div className="mt-2 flex items-center gap-3">
+        <ProductImage product={deal} className="!w-24 shrink-0" rounded="rounded-2xl" padding="p-1" />
+        <div className="min-w-0">
+          <p className="font-bold leading-tight">{deal.name}</p>
+          <p className="text-xs text-muted">{packLabel(deal)}</p>
+          {hydrated && user ? (
+            <p className="mt-1 font-poster text-xl text-brand">
+              {formatPrice(currentPrice(deal))} <span className="font-sans text-xs text-muted line-through">{formatPrice(deal.price)}</span>
+            </p>
+          ) : (
+            <p className="mt-1 text-xs font-bold text-ink">Logga in för kampanjpris</p>
+          )}
         </div>
-      ))}
-    </div>
+      </div>
+      <div className="mt-3 flex items-center justify-between gap-2 border-t border-line pt-3 text-xs font-semibold">
+        <span>Slutar om</span>
+        <Countdown target={campaignEnd(now ?? new Date())} now={now} compact tone="dark" />
+      </div>
+    </Link>
   );
 }
 
 export function Hero() {
   const { user, hydrated, orders } = useShop();
-  const featured = getProduct("10107")!;
   const loggedIn = hydrated && !!user;
+  const { rating, reviewCount } = shopConfig.socialProof;
   const lastOrder = orders[0];
 
   return (
-    <section className="container-page pt-4 md:pt-8">
-      <div className="grid overflow-hidden rounded-[28px] bg-cream md:min-h-[540px] md:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
-        <div className="relative order-1 h-60 sm:h-72 md:order-2 md:h-auto">
-          <HeroVisual />
-          <Link
-            href={`/produkt/${featured.slug}`}
-            className="absolute bottom-4 left-4 hidden items-center gap-3 rounded-2xl sm:flex bg-white/95 p-2.5 pr-4 shadow-soft backdrop-blur transition hover:bg-white sm:right-auto sm:max-w-xs md:bottom-6 md:left-6"
-          >
-            <ProductImage product={featured} className="!w-14 shrink-0" rounded="rounded-xl" padding="p-1" />
-            <span className="min-w-0 flex-1">
-              <span className="text-[11px] font-semibold tracking-[0.08em] text-brand uppercase">Nyhet i sortimentet</span>
-              <span className="block truncate text-sm font-semibold text-ink">{featured.name}</span>
-              <span className="block text-xs text-muted">
-                {packLabel(featured)}
-                {loggedIn && <> · {formatPrice(currentPrice(featured))}/krt</>}
-              </span>
-            </span>
-            <ArrowRight className="size-4 shrink-0 text-ink-soft" />
-          </Link>
-        </div>
+    <section className="relative bg-white lg:min-h-[640px] lg:bg-ink" data-testid="hero">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/assets/bilder/hero-gata.jpg"
+        alt="Färgglada hus i en latinamerikansk gata"
+        className="h-[260px] w-full object-cover object-[60%_center] sm:h-[340px] lg:absolute lg:inset-0 lg:h-full"
+      />
+      <div className="absolute inset-x-0 top-0 hidden h-full bg-gradient-to-r from-ink/45 via-ink/5 to-transparent lg:block" />
 
-        <div className={`order-2 flex flex-col justify-center px-6 py-8 transition-opacity duration-200 sm:px-10 md:order-1 md:py-12 lg:px-14 ${hydrated ? "opacity-100" : "opacity-0"}`}>
+      <div className="container-page relative lg:flex lg:min-h-[640px] lg:items-center lg:py-14">
+        <div
+          className={`relative -mt-14 rounded-[32px] bg-ink px-6 pt-7 pb-8 text-white shadow-lift transition-opacity duration-200 sm:px-9 lg:mt-0 lg:w-[600px] lg:px-11 lg:pt-10 lg:pb-11 ${
+            hydrated ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <p className="flex flex-wrap items-center gap-2 text-[13px] font-semibold text-white/85">
+            <span className="flex text-sun">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} className="size-4 fill-current" strokeWidth={0} />
+              ))}
+            </span>
+            {rating.toLocaleString("sv-SE")} av 5 från {reviewCount} butiker
+          </p>
+
           {loggedIn && user ? (
             <>
-              <p className="eyebrow">{user.company}</p>
-              <h1 className="mt-3 text-[34px] leading-[1.08] font-semibold sm:text-5xl lg:text-[54px]">Välkommen tillbaka, {user.contact.split(" ")[0]}</h1>
-              <p className="mt-5 max-w-lg text-base text-ink-soft md:text-lg">
-                {lastOrder ? (
-                  <>
-                    Din senaste order <span className="font-semibold text-ink">{lastOrder.orderNo}</span> har status{" "}
-                    <span className="font-semibold text-ink">{orderStatusLabel[lastOrder.status].toLowerCase()}</span>. Beställ som vanligt i sortimentet eller
-                    skriv in artikelnummer direkt i snabbbeställningen.
-                  </>
-                ) : (
-                  "Beställ som vanligt i sortimentet eller skriv in artikelnummer direkt i snabbbeställningen."
-                )}
+              <h1 className="mt-4 font-poster text-[46px] leading-[1.3] tracking-wide uppercase sm:text-[64px] lg:text-[72px]">
+                Hej {user.contact.split(" ")[0]}!
+                <br />
+                <span className="text-sun">Fiesta-veckan</span>
+                <br />
+                är igång
+              </h1>
+              <p className="mt-5 max-w-md text-base text-white/80 md:text-[17px]">
+                Spara upp till 13 % på Arizona, Postobón och Goya. {lastOrder ? `Din senaste order ${lastOrder.orderNo} har status ${lastOrder.status}.` : ""}
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/mitt-konto/snabbbestallning" className="btn btn-lg btn-primary">
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link href="/erbjudanden" className="btn btn-lg btn-primary">
+                  Handla kampanjerna <ArrowRight className="size-5" />
+                </Link>
+                <Link href="/mitt-konto/snabbbestallning" className="btn btn-lg border-2 border-white/25 text-white hover:border-white">
                   Snabbbeställning
                 </Link>
-                <Link href="/mitt-konto/ordrar" className="btn btn-lg btn-outline">
-                  Beställ igen
-                </Link>
               </div>
-              <p className="mt-6 text-sm text-ink-soft">
-                Kundnummer {user.customerNo} · Faktura {shopConfig.invoiceDays} dagar · Din säljare {user.salesRep.name}
-              </p>
             </>
           ) : (
             <>
-              <p className="eyebrow">Grossist för butiker i hela Sverige</p>
-              <h1 className="mt-3 text-[34px] leading-[1.08] font-semibold sm:text-5xl lg:text-[54px]">
-                Latinamerikanska och amerikanska favoriter till din butik
+              <h1 className="mt-4 font-poster text-[46px] leading-[0.97] tracking-wide uppercase sm:text-[64px] lg:text-[76px]">
+                Smaken av
+                <br />
+                <span className="text-sun">Latinamerika</span>
+                <br />
+                till din butik
               </h1>
-              <p className="mt-5 max-w-lg text-base text-ink-soft md:text-lg">
-                Vi säljer livsmedel och dryck per kartong till butiker, kiosker och restauranger. Bli kund för att se priser och beställa direkt i webbshoppen.
+              <p className="mt-5 max-w-md text-base text-white/80 md:text-[17px]">
+                Goya, Postobón, Saltín Noel, Monster och många fler storsäljare. Grossistpris per kartong, snabb leverans och faktura på {shopConfig.invoiceDays}{" "}
+                dagar.
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-7 flex flex-wrap gap-3">
                 <Link href="/bli-kund" className="btn btn-lg btn-primary" data-testid="hero-become-customer">
-                  Bli kund
+                  Bli kund på 2 minuter <ArrowRight className="size-5" />
                 </Link>
-                <Link href="/sortiment" className="btn btn-lg btn-outline">
-                  Se sortimentet
+                <Link href="/erbjudanden" className="btn btn-lg border-2 border-white/25 text-white hover:border-white">
+                  Se veckans kampanjer
                 </Link>
               </div>
-              <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink-soft">
-                <li className="flex items-center gap-2">
-                  <Check className="size-4 text-brand" strokeWidth={2.4} /> Faktura {shopConfig.invoiceDays} dagar
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="size-4 text-brand" strokeWidth={2.4} /> Leverans inom {shopConfig.deliveryDays} arbetsdagar
-                </li>
+              <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/85">
+                {["Ingen startavgift", "Rimliga grossistpriser", `Faktura ${shopConfig.invoiceDays} dagar`].map((t) => (
+                  <li key={t} className="flex items-center gap-1.5">
+                    <Check className="size-4 text-sun" strokeWidth={3} /> {t}
+                  </li>
+                ))}
               </ul>
             </>
           )}
+          <DeliveryPromise className="mt-6 border-t border-white/15 pt-5" />
         </div>
       </div>
+      <DealCard />
     </section>
   );
 }
