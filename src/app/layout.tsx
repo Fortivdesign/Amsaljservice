@@ -7,6 +7,7 @@ import "./globals.css";
 import { shopConfig } from "@/config/shop";
 import { ShopProvider } from "@/context/ShopContext";
 import { CampaignBar } from "@/components/CampaignBar";
+import { LimitedDemoGuard } from "@/components/LimitedDemoGuard";
 import { ConversionLayer } from "@/components/conversion/ConversionLayer";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -38,6 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <CartDrawer />
           <Toaster />
           <ConversionLayer />
+          <LimitedDemoGuard />
         </ShopProvider>
       </body>
     </html>

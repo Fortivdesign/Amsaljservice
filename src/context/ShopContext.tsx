@@ -27,6 +27,7 @@ export interface Toast {
   message: string;
   detail?: string;
   action?: "open-cart";
+  tone?: "info";
 }
 
 interface PersistedState {

@@ -58,9 +58,26 @@ Produkterna finns i `src/data/catalog.ts` (33 produkter i 5 kategorier) och demo
 
 ## Logga och produktbilder
 
-Lägg bilder i mappen `assets` och starta om `npm run dev`. Se `assets/README.md` för hur filerna ska heta. Saknas en produktbild visas en platshållare som ritar förpackningen i märkets färger.
+Alla 33 produkter har riktiga produktbilder i `assets/products`, döpta efter artikelnumret. De är hämtade från tillverkarnas och butikernas sajter (bland annat goya.com, dulces.se och colombianska Éxito) och friställda så att de ligger likadant på den ljusa bakgrunden. Källorna står i `assets/products/KALLOR.md`. Bilderna är till för att visa prototypen och ska bytas mot leverantörernas bilder innan sajten går live.
+
+Vill du byta en bild: lägg den nya i `assets/products` med samma filnamn och starta om `npm run dev`. Se `assets/README.md` för hur filerna ska heta. Saknas en produktbild visas en platshållare som ritar förpackningen i märkets färger.
 
 Miljöbilderna på startsidan ligger i `assets/bilder` och kommer från Pexels (fria att använda). Källorna står i `assets/bilder/KALLOR.md`.
+
+## Nedbantad version för kunden
+
+Det finns en version där bara startsidan och produktsidorna går att öppna. Klickar man på något annat (kategorier, logga in, varukorg, kassa och så vidare) visas "Den här delen byggs i nästa steg", och skriver man in en annan adress hamnar man på startsidan. Popupen, kampanjerna och sökförslagen finns kvar.
+
+Live: https://amsaljservice-forslag.vercel.app
+
+Bygg den själv genom att sätta en miljövariabel:
+
+```bash
+NEXT_PUBLIC_VISNINGSLAGE=begransad npm run build
+npm start
+```
+
+Vilka sidor som är öppna styrs i `src/lib/demoMode.ts`.
 
 ## Skärmdumpar till presentationen
 
@@ -106,4 +123,4 @@ Bilderna: 01 startsida utloggad, 02 kategori utloggad, 03 bli kund, 04 kontot gr
 
 Next.js 16 (App Router) med Tailwind CSS 4, TypeScript och ikoner från Lucide. Typsnitten Anton (rubriker), Outfit och DM Sans följer med som npm-paket, så inget hämtas från internet när sidan visas.
 
-Live: https://amsaljservice.vercel.app
+Live, hela versionen: https://amsaljservice.vercel.app

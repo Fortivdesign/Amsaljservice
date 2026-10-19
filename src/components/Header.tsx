@@ -28,6 +28,7 @@ function CartButton() {
       onClick={() => setCartOpen(true)}
       aria-label={`Varukorg, ${count} kartonger`}
       data-testid="cart-button"
+      data-demo-lock
       className="relative inline-flex h-11 items-center gap-2 rounded-full bg-ink pr-4 pl-3.5 text-[15px] font-bold text-white transition-colors hover:bg-black max-md:size-11 max-md:justify-center max-md:p-0"
     >
       <ShoppingBag className="size-5" strokeWidth={2} />

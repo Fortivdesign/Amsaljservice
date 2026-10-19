@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, X } from "lucide-react";
+import { CheckCircle2, Hammer, X } from "lucide-react";
 import { useShop } from "@/context/ShopContext";
 
 export function Toaster() {
@@ -15,10 +15,14 @@ export function Toaster() {
           data-testid="toast"
           className="animate-slide-up pointer-events-auto flex w-full max-w-sm items-center gap-3 rounded-2xl bg-ink py-3 pr-2 pl-4 text-white shadow-lift"
         >
-          <CheckCircle2 className="size-5 shrink-0 text-brand-200" strokeWidth={2} />
+          {t.tone === "info" ? (
+            <Hammer className="size-5 shrink-0 text-sun" strokeWidth={2} />
+          ) : (
+            <CheckCircle2 className="size-5 shrink-0 text-brand-200" strokeWidth={2} />
+          )}
           <div className="min-w-0 flex-1">
             <p className="text-sm font-semibold">{t.message}</p>
-            {t.detail && <p className="truncate text-xs text-white/70">{t.detail}</p>}
+            {t.detail && <p className={`text-xs text-white/70 ${t.tone === "info" ? "" : "truncate"}`}>{t.detail}</p>}
           </div>
           {t.action === "open-cart" && (
             <button

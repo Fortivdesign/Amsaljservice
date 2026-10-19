@@ -10,6 +10,7 @@ import { shopConfig } from "@/config/shop";
 import { brands, currentPrice, discountPercent, getBrand, getProduct, offerProducts, packLabel, type Product } from "@/data/catalog";
 import { formatPrice, normalize } from "@/lib/format";
 import { ProductImage } from "../ProductImage";
+import { LIMITED_DEMO, LIMITED_DETAIL, LIMITED_MESSAGE } from "@/lib/demoMode";
 
 /*
  * Konverteringslagret:
@@ -44,7 +45,7 @@ function popupsOff() {
 function WelcomePopup() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, hydrated, addToCart, setCartOpen } = useShop();
+  const { user, hydrated, addToCart, setCartOpen, showToast } = useShop();
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const blocked = HIDDEN_PATHS.some((p) => pathname.startsWith(p));
@@ -165,6 +166,10 @@ function WelcomePopup() {
             onSubmit={(e) => {
               e.preventDefault();
               close();
+              if (LIMITED_DEMO) {
+                showToast({ message: LIMITED_MESSAGE, detail: LIMITED_DETAIL, tone: "info" });
+                return;
+              }
               router.push(`/bli-kund?rabatt=${code}${email ? `&epost=${encodeURIComponent(email)}` : ""}`);
             }}
           >

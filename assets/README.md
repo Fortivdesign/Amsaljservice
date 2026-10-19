@@ -17,5 +17,5 @@ Artikelnummer och märkesnamn finns i `src/data/catalog.ts`.
 ## Om filerna som ligger här nu
 
 - `logo.png` och `logo-ljus.png` är framtagna ur favicon på amsaljservice.se eftersom originalfilen saknades. Byt gärna mot originalet, helst som SVG.
-- `hero.jpg` är ett utsnitt av butiksbilden på amsaljservice.se (bara hyllan, utan person).
-- Mapparna `products` och `brands` är tomma, så platshållare visas för alla produkter och märken skrivs ut som text.
+- `hero.jpg` används inte längre. Startsidans bilder ligger i `bilder` (källor i `bilder/KALLOR.md`).
+- `products` har en friställd bild per produkt (källor i `products/KALLOR.md`). Mappen `brands` är tom, så märken skrivs ut som text.

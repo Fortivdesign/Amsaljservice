@@ -8,13 +8,14 @@ import { brands, categories, getBrand, packLabel, currentPrice } from "@/data/ca
 import { searchProducts } from "@/lib/search";
 import { formatPrice, normalize } from "@/lib/format";
 import { useShop } from "@/context/ShopContext";
+import { LIMITED_DEMO, LIMITED_DETAIL, LIMITED_MESSAGE } from "@/lib/demoMode";
 import { ProductImage } from "./ProductImage";
 
 const popular = ["Dr Pepper", "Monster", "Goya", "Saltín Noel", "Buljong"];
 
 export function SearchBox({ className = "", autoFocus = false, onNavigate }: { className?: string; autoFocus?: boolean; onNavigate?: () => void }) {
   const router = useRouter();
-  const { user } = useShop();
+  const { user, showToast } = useShop();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -56,6 +57,10 @@ export function SearchBox({ className = "", autoFocus = false, onNavigate }: { c
 
   const submit = (q = query) => {
     if (!q.trim()) return;
+    if (LIMITED_DEMO) {
+      showToast({ message: LIMITED_MESSAGE, detail: LIMITED_DETAIL, tone: "info" });
+      return;
+    }
     close();
     router.push(`/sok?q=${encodeURIComponent(q.trim())}`);
   };

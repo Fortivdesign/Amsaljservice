@@ -34,7 +34,12 @@ export function ProductImage({
       <div className={`absolute inset-0 flex items-center justify-center ${padding}`}>
         {url ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={url} alt={product.name} loading="lazy" className="h-full w-full object-contain mix-blend-multiply" />
+          <img
+            src={url}
+            alt={product.name}
+            loading="lazy"
+            className="h-full w-full object-contain drop-shadow-[0_10px_14px_rgba(28,18,48,0.16)]"
+          />
         ) : (
           <PackPlaceholder shape={product.shape} label={brand?.name} color={product.packColor ?? brand?.color} accent={product.packAccent ?? brand?.accent} className="h-full w-full" />
         )}
