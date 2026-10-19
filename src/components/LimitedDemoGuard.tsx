@@ -10,7 +10,7 @@ import { LIMITED_DEMO, LIMITED_DETAIL, LIMITED_MESSAGE, PROTOTYPE_DEMO, allowedI
  *
  * Alla lägen: länkar till sidor som inte är med, och allt märkt data-demo-lock.
  * Prototypläget: dessutom knappar (lägg i varukorg, favoriter, antal ...).
- * Undantag är popuper, menyn, flikar, sökrutan och allt inne på Mitt konto.
+ * Undantag är popuper, menyn, sökrutan och allt inne på Mitt konto.
  */
 export function LimitedDemoGuard() {
   const { showToast } = useShop();
@@ -39,7 +39,7 @@ export function LimitedDemoGuard() {
       const control = target.closest("button, [role='button'], input[type='submit'], summary");
       if (!control) return;
       if (window.location.pathname.startsWith("/mitt-konto")) return;
-      if (control.closest("[role='dialog'], [role='tablist'], [role='search'], [data-testid='menu-button']")) return;
+      if (control.closest("[role='dialog'], [role='search'], [data-testid='menu-button']")) return;
       stop(e);
     };
     document.addEventListener("click", onClick, true);

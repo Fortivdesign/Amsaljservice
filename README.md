@@ -72,7 +72,7 @@ Miljövariabeln `NEXT_PUBLIC_VISNINGSLAGE` styr hur mycket som går att klicka p
 
 | Värde | Vad som går att öppna |
 | --- | --- |
-| `prototyp` (förvalt här) | Startsidan, Arizona Mucho Mango och Mitt konto. Kontoknappen loggar in demokunden direkt. Knappar som lägg i varukorg och favoriter är spärrade. |
+| `prototyp` (förvalt här) | Startsidan, Arizona Mucho Mango och Mitt konto. Kontoknappen loggar in demokunden direkt. Knappar som lägg i varukorg, favoriter och flikarna under Bästsäljare är spärrade. |
 | `begransad` | Startsidan och alla produktsidor |
 | `hela` | Allt, som på huvudgrenen |
 
