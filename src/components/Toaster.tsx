@@ -8,7 +8,7 @@ export function Toaster() {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-4 z-[80] flex flex-col items-center gap-2 px-4 md:right-6 md:bottom-6 md:left-auto md:items-end" aria-live="polite">
+    <div className="pointer-events-none fixed inset-x-0 bottom-4 z-[80] flex flex-col items-center gap-2 px-4 md:right-6 md:bottom-6 md:left-auto md:items-end" aria-live="polite" data-demo-allow>
       {toasts.map((t) => (
         <div
           key={t.id}

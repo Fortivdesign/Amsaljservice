@@ -1,5 +1,7 @@
 # AM Säljservice, prototyp av B2B-webbshop
 
+> **Grenen `prototyp`.** Här är sajten låst som visningsprototyp: bara startsidan, en produkt (Arizona Mucho Mango, första kortet i Fiesta-veckan) och Mitt konto går att öppna. Allt annat visar "Den här delen byggs i nästa steg". Hela prototypen finns kvar orörd på grenen `claude/peaceful-hawking-ojm12c`. Live: https://amsaljservice-prototyp.vercel.app
+
 Klickbar designskiss av en webbshop för AM Säljservice AB, grossist för latinamerikansk mat och amerikansk dryck till butiker. Allt säljs per kartong. Prototypen är inte kopplad till något riktigt system: produkter, priser, kunder och ordrar är påhittade och inloggning och varukorg sparas bara i webbläsaren.
 
 ## Kom igång
@@ -63,6 +65,18 @@ Alla 33 produkter har riktiga produktbilder i `assets/products`, döpta efter ar
 Vill du byta en bild: lägg den nya i `assets/products` med samma filnamn och starta om `npm run dev`. Se `assets/README.md` för hur filerna ska heta. Saknas en produktbild visas en platshållare som ritar förpackningen i märkets färger.
 
 Miljöbilderna på startsidan ligger i `assets/bilder` och kommer från Pexels (fria att använda). Källorna står i `assets/bilder/KALLOR.md`.
+
+## Visningslägen
+
+Miljövariabeln `NEXT_PUBLIC_VISNINGSLAGE` styr hur mycket som går att klicka på. På den här grenen är `prototyp` förvalt.
+
+| Värde | Vad som går att öppna |
+| --- | --- |
+| `prototyp` (förvalt här) | Startsidan, Arizona Mucho Mango och Mitt konto. Kontoknappen loggar in demokunden direkt. Knappar som lägg i varukorg och favoriter är spärrade. |
+| `begransad` | Startsidan och alla produktsidor |
+| `hela` | Allt, som på huvudgrenen |
+
+Kör till exempel `NEXT_PUBLIC_VISNINGSLAGE=hela npm run dev` för att få hela prototypen lokalt, till exempel innan du tar skärmdumparna. Produkten som är öppen i prototypen ställs in i `src/lib/demoMode.ts`.
 
 ## Nedbantad version för kunden
 

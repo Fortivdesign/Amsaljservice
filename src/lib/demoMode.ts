@@ -1,24 +1,41 @@
 /**
- * Visningsläge för säljmötet.
+ * Visningslägen för säljmötet. Styrs med miljövariabeln
+ * NEXT_PUBLIC_VISNINGSLAGE när sajten byggs:
  *
- * Sätt NEXT_PUBLIC_VISNINGSLAGE=begransad när du bygger för att få den
- * nedbantade versionen: bara startsidan och produktsidorna går att öppna.
- * Allt annat (kategorier, kassa, logga in, Mitt konto ...) visar ett
- * meddelande om att det byggs i nästa steg, och adresserna skickas till
- * startsidan.
+ *   prototyp   (standard på den här grenen) Startsidan, en enda produkt
+ *              (den första i Fiesta-veckan) och Mitt konto går att öppna.
+ *              Allt annat visar "Den här delen byggs i nästa steg".
+ *   begransad  Startsidan och alla produktsidor går att öppna.
+ *   hela       Hela prototypen utan spärrar.
  */
-export const LIMITED_DEMO = process.env.NEXT_PUBLIC_VISNINGSLAGE === "begransad";
+export type DemoMode = "hela" | "begransad" | "prototyp";
 
-/** Sidor som går att öppna i den nedbantade versionen. */
+const fromEnv = process.env.NEXT_PUBLIC_VISNINGSLAGE;
+export const DEMO_MODE: DemoMode = fromEnv === "hela" || fromEnv === "begransad" || fromEnv === "prototyp" ? fromEnv : "prototyp";
+
+/** Någon form av spärr är på. */
+export const LIMITED_DEMO = DEMO_MODE !== "hela";
+/** Den hårdaste spärren: startsida, en produkt och Mitt konto. */
+export const PROTOTYPE_DEMO = DEMO_MODE === "prototyp";
+
+/** Produkten som går att öppna i prototypen: första kortet i Fiesta-veckan (Arizona Mucho Mango). */
+export const FEATURED_PRODUCT_SLUG = "arizona-mucho-mango-591-ml";
+
+/** Sidor som går att öppna i det valda läget. */
 export function allowedInLimitedDemo(pathname: string): boolean {
-  return pathname === "/" || pathname.startsWith("/produkt/");
+  if (pathname === "/") return true;
+  if (PROTOTYPE_DEMO) {
+    return pathname === `/produkt/${FEATURED_PRODUCT_SLUG}` || pathname === "/mitt-konto" || pathname.startsWith("/mitt-konto/");
+  }
+  return pathname.startsWith("/produkt/");
 }
 
 export const LIMITED_MESSAGE = "Den här delen byggs i nästa steg";
-export const LIMITED_DETAIL = "I den här versionen visar vi startsidan och produktsidorna.";
+export const LIMITED_DETAIL = PROTOTYPE_DEMO
+  ? "I prototypen visar vi startsidan, en produkt och Mitt konto."
+  : "I den här versionen visar vi startsidan och produktsidorna.";
 
-/** Adresser som skickas till startsidan i den nedbantade versionen. */
-export const LIMITED_REDIRECT_SOURCES = [
+const COMMON_REDIRECTS = [
   "/sortiment",
   "/kategori/:path*",
   "/marken",
@@ -31,7 +48,12 @@ export const LIMITED_REDIRECT_SOURCES = [
   "/logga-in",
   "/kassa",
   "/kassa/:path*",
-  "/mitt-konto",
-  "/mitt-konto/:path*",
   "/kundservice",
 ];
+
+/** Adresser som skickas till startsidan i det valda läget. */
+export const LIMITED_REDIRECT_SOURCES: string[] = !LIMITED_DEMO
+  ? []
+  : PROTOTYPE_DEMO
+    ? [...COMMON_REDIRECTS, `/produkt/:slug((?!${FEATURED_PRODUCT_SLUG}$).*)`]
+    : [...COMMON_REDIRECTS, "/mitt-konto", "/mitt-konto/:path*"];

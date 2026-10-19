@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { Building2, ClipboardList, FileText, Heart, LayoutGrid, Lock, LogOut, Package, Zap } from "lucide-react";
 import { useShop } from "@/context/ShopContext";
+import { PROTOTYPE_DEMO } from "@/lib/demoMode";
 
 export const accountNav = [
   { href: "/mitt-konto", label: "Översikt", icon: LayoutGrid },
@@ -19,9 +20,15 @@ export const accountNav = [
 export function AccountShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, hydrated, logout } = useShop();
+  const { user, hydrated, login, logout } = useShop();
 
-  if (!hydrated) return <div className="min-h-[60vh]" />;
+  // I prototypen kommer man rakt in på Mitt konto som demokunden
+  const leaving = useRef(false);
+  useEffect(() => {
+    if (PROTOTYPE_DEMO && hydrated && !user && !leaving.current) login();
+  }, [hydrated, user, login]);
+
+  if (!hydrated || (PROTOTYPE_DEMO && !user)) return <div className="min-h-[60vh]" />;
 
   if (!user) {
     return (
@@ -78,6 +85,7 @@ export function AccountShell({ children }: { children: ReactNode }) {
                   <button
                     type="button"
                     onClick={() => {
+                      leaving.current = true;
                       logout();
                       router.push("/");
                     }}

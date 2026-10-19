@@ -10,7 +10,7 @@ import { shopConfig } from "@/config/shop";
 import { brands, currentPrice, discountPercent, getBrand, getProduct, offerProducts, packLabel, type Product } from "@/data/catalog";
 import { formatPrice, normalize } from "@/lib/format";
 import { ProductImage } from "../ProductImage";
-import { LIMITED_DEMO, LIMITED_DETAIL, LIMITED_MESSAGE } from "@/lib/demoMode";
+import { LIMITED_DEMO, LIMITED_DETAIL, LIMITED_MESSAGE, PROTOTYPE_DEMO } from "@/lib/demoMode";
 
 /*
  * Konverteringslagret:
@@ -147,6 +147,7 @@ function WelcomePopup() {
             </div>
             <button
               type="button"
+              data-demo-lock
               onClick={() => {
                 addToCart(deal.articleNo, 5, { silent: true });
                 close();
@@ -304,7 +305,7 @@ function MobileStickyCta() {
       <div className="fixed inset-x-0 bottom-0 z-[70] border-t border-line bg-white/95 px-3 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden" data-testid="mobile-sticky-cta">
         <p className="mb-1.5 text-center text-[11px] font-semibold text-ink-soft">Se priser och beställ per kartong</p>
         <div className="grid grid-cols-[1fr_1.3fr] gap-2">
-          <Link href="/logga-in" className="btn btn-sm btn-outline h-11">
+          <Link href={PROTOTYPE_DEMO ? "/mitt-konto" : "/logga-in"} className="btn btn-sm btn-outline h-11">
             Logga in
           </Link>
           <Link href="/bli-kund" className="btn btn-sm btn-primary h-11">

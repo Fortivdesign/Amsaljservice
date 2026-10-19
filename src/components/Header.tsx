@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronRight, Flame, LogOut, Menu, Phone, ShoppingBag, Sparkles, User, X } from "lucide-react";
 import { useShop } from "@/context/ShopContext";
+import { PROTOTYPE_DEMO } from "@/lib/demoMode";
 import { categories } from "@/data/catalog";
 import { shopConfig } from "@/config/shop";
 import { cartCount } from "@/lib/order";
@@ -50,7 +51,7 @@ function AccountButtons() {
   return (
     <>
       <Link
-        href={loggedIn ? "/mitt-konto" : "/logga-in"}
+        href={loggedIn || PROTOTYPE_DEMO ? "/mitt-konto" : "/logga-in"}
         data-testid="account-button"
         className="inline-flex h-11 items-center gap-2 rounded-full border-2 border-ink/10 bg-white pr-4 pl-3 text-[15px] font-bold whitespace-nowrap text-ink transition-colors hover:border-ink max-md:size-11 max-md:justify-center max-md:p-0"
       >
