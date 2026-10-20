@@ -31,6 +31,7 @@ Priser syns bara för inloggade. Utloggade ser "Logga in för att se pris" och h
 
 - **Rabattruta:** efter 12 sekunder, eller när muspekaren lämnar fönstret uppåt, visas "Spara 10 % på första ordern". Den visas en gång per besök och aldrig på bli kund, logga in eller i kassan. Inloggade får i stället veckans deal.
 - **Sökknuff:** söker man på något som har en kampanj (till exempel "goya" eller "arizona") dyker en ruta upp med rabatten. Ger två sökningar inga träffar visas en ruta med telefonnummer till kundservice.
+- **Varukorgen:** knappen uppe till höger visar "Till kassan" och summan, med en tunn mätare mot fri frakt. När man lägger i en produkt fälls en ruta ut med produkten och hur mycket som är kvar till fri frakt, och toppraden byter "Fri frakt över 3 000 kr" mot till exempel "1 328 kr kvar till fri frakt".
 - **Mobil:** utloggade har en fast list längst ner med "Logga in" och "Bli kund, spara 10 %".
 
 För att visa rabattrutan direkt i ett möte: öppna http://localhost:3000/?popup=visa. `?popup=av` stänger av den i webbläsaren och `?popup=pa` slår på den igen.
@@ -98,7 +99,7 @@ Skriptet (`scripts/screenshots.mjs`) klickar igenom hela flödet och sparar numr
 - `screenshots/dator/` och `screenshots/mobil/`: det som syns på skärmen, 1440 respektive 390 pixlar bred
 - `screenshots/dator-helsida/` och `screenshots/mobil-helsida/`: hela sidan uppifrån och ner
 
-Bilderna: 01 startsida utloggad, 02 kategori utloggad, 03 bli kund, 04 kontot granskas, 05 logga in, 06 startsida inloggad, 07 kategori med priser, 08 produktsida, 09 varukorg med fraktmätare, 10 kassa leverans, 11 kassa frakt, 12 kassa betalning, 13 orderbekräftelse, 14 mitt konto, 15 orderhistorik med beställ igen, 16 fakturor, 17 snabbbeställning, 18 rabattpopup, 19 sökknuff med kampanj.
+Bilderna: 01 startsida utloggad, 02 kategori utloggad, 03 bli kund, 04 kontot granskas, 05 logga in, 06 startsida inloggad, 07 kategori med priser, 08 produktsida, 09 varukorg med fraktmätare, 10 kassa leverans, 11 kassa frakt, 12 kassa betalning, 13 orderbekräftelse, 14 mitt konto, 15 orderhistorik med beställ igen, 16 fakturor, 17 snabbbeställning, 18 rabattpopup, 19 sökknuff med kampanj, 20 rutan som visas när man lagt i en produkt.
 
 Är ingen server igång bygger skriptet prototypen och startar den tillfälligt. `HELSIDA=0` hoppar över helsidesbilderna och `ENHET=dator` eller `ENHET=mobil` kör bara den ena.
 

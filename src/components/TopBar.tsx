@@ -3,16 +3,28 @@
 import { FileText, PackageCheck, Star, Truck } from "lucide-react";
 import { shopConfig } from "@/config/shop";
 import { formatAmount } from "@/lib/format";
+import { useShop } from "@/context/ShopContext";
+import { cartSubtotal, remainingForFreeShipping } from "@/lib/order";
 
-const messages = [
-  { icon: Truck, text: `Snabb leverans inom ${shopConfig.deliveryDays} arbetsdagar` },
-  { icon: PackageCheck, text: `Fri frakt över ${formatAmount(shopConfig.freeShippingThreshold)}` },
-  { icon: FileText, text: "Betala mot faktura" },
-];
+type Message = { icon: typeof Truck; text: string; highlight?: boolean };
 
-function Item({ icon: Icon, text }: { icon: typeof Truck; text: string }) {
+/** Fraktbudskapet visar hur mycket som är kvar när det finns varor i varukorgen. */
+function useMessages(): Message[] {
+  const { cart, hydrated } = useShop();
+  const subtotal = hydrated ? cartSubtotal(cart) : 0;
+  const remaining = remainingForFreeShipping(subtotal);
+  const freight: Message =
+    subtotal <= 0
+      ? { icon: PackageCheck, text: `Fri frakt över ${formatAmount(shopConfig.freeShippingThreshold)}` }
+      : remaining > 0
+        ? { icon: PackageCheck, text: `${formatAmount(remaining)} kvar till fri frakt`, highlight: true }
+        : { icon: PackageCheck, text: "Du har fri frakt", highlight: true };
+  return [{ icon: Truck, text: `Snabb leverans inom ${shopConfig.deliveryDays} arbetsdagar` }, freight, { icon: FileText, text: "Betala mot faktura" }];
+}
+
+function Item({ icon: Icon, text, highlight }: Message) {
   return (
-    <span className="flex shrink-0 items-center gap-2 font-semibold whitespace-nowrap">
+    <span className={`flex shrink-0 items-center gap-2 font-semibold whitespace-nowrap ${highlight ? "text-sun" : ""}`} data-testid={highlight ? "usp-freight-left" : undefined}>
       <Icon className="size-4 text-sun" strokeWidth={2.2} />
       {text}
     </span>
@@ -25,12 +37,13 @@ function Item({ icon: Icon, text }: { icon: typeof Truck; text: string }) {
  */
 export function TopBar() {
   const { rating, reviewCount } = shopConfig.socialProof;
+  const messages = useMessages();
   return (
     <div className="bg-ink text-[12.5px] text-white" data-testid="usp-bar">
       <div className="container-page hidden h-9 items-center justify-between gap-6 md:flex">
         <div className="flex items-center gap-8 lg:gap-12">
-          {messages.map((m) => (
-            <Item key={m.text} {...m} />
+          {messages.map((m, i) => (
+            <Item key={i} {...m} />
           ))}
         </div>
         <span className="hidden items-center gap-1.5 font-semibold whitespace-nowrap lg:flex">

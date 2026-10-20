@@ -231,15 +231,26 @@ async function runDevice(browser, device) {
   await page.getByRole("button", { name: "Lägg i varukorg" }).first().waitFor();
   await shot("07-kategori-med-priser");
 
+  const closeAdded = async () => {
+    const pop = page.getByTestId("added-to-cart");
+    if (await pop.isVisible().catch(() => false)) await pop.getByRole("button", { name: "Stäng" }).click().catch(() => {});
+    await pop.waitFor({ state: "detached", timeout: 5000 }).catch(() => {});
+  };
   const addFromList = async (productName, qty) => {
+    await closeAdded();
     const card = page.getByTestId("product-card").filter({ has: page.getByRole("link", { name: productName, exact: true }) });
     await card.getByLabel("Antal kartonger").fill(String(qty));
     await card.getByRole("button", { name: "Lägg i varukorg" }).click();
-    await page.getByTestId("toast").first().waitFor();
+    await page.getByTestId("added-to-cart").waitFor();
   };
   await addFromList("Dr Pepper Original", 4);
   await addFromList("Monster Energy Original", 2);
   await addFromList("Arizona Green Tea med honung", 2);
+  // 20 Rutan som visas när man lagt i en produkt, med hur mycket som är kvar till fri frakt
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await settle(page, 900);
+  await shot("20-tillagd-i-varukorgen", { full: false });
+  await closeAdded();
   await waitForToastsToClear(page);
 
   // 08 Produktsida, hittad via sökfältet
@@ -253,6 +264,8 @@ async function runDevice(browser, device) {
   await page.getByRole("button", { name: "Öka antal" }).first().click();
   await shot("08-produktsida");
   await page.getByTestId("add-to-cart").click();
+  await page.getByTestId("added-to-cart").waitFor();
+  await closeAdded();
   await waitForToastsToClear(page);
 
   // 09 Varukorg med fraktmätare

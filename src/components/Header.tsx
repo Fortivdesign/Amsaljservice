@@ -4,11 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { ChevronRight, Flame, LogOut, Menu, Phone, ShoppingBag, Sparkles, User, X } from "lucide-react";
+import { ChevronRight, Flame, LogOut, Menu, Phone, Sparkles, User, X } from "lucide-react";
 import { useShop } from "@/context/ShopContext";
 import { categories } from "@/data/catalog";
 import { shopConfig } from "@/config/shop";
-import { cartCount } from "@/lib/order";
+import { cartCount, cartSubtotal } from "@/lib/order";
+import { formatPrice } from "@/lib/format";
+import { AddedToCartPopover } from "./AddedToCartPopover";
+import { CartonIcon } from "./CartonIcon";
 import { categoryStyle } from "@/lib/categoryStyle";
 import { Logo } from "./Logo";
 import { SearchBox } from "./SearchBox";
@@ -20,26 +23,44 @@ export const navItems: { href: string; label: string; dot?: string; accent?: boo
 ];
 
 function CartButton() {
-  const { cart, setCartOpen, hydrated } = useShop();
+  const { cart, setCartOpen, hydrated, lastAdded } = useShop();
   const count = hydrated ? cartCount(cart) : 0;
+  const subtotal = hydrated ? cartSubtotal(cart) : 0;
+  const pct = Math.min(100, (subtotal / shopConfig.freeShippingThreshold) * 100);
   return (
     <button
+      // Ny nyckel vid varje tillägg så att knappen gör ett litet hopp
+      key={lastAdded?.id ?? 0}
       type="button"
       onClick={() => setCartOpen(true)}
-      aria-label={`Varukorg, ${count} kartonger`}
+      aria-label={`Till kassan, ${count} kartonger, ${formatPrice(subtotal)}`}
       data-testid="cart-button"
       data-demo-lock
-      className="relative inline-flex h-11 items-center gap-2 rounded-full bg-ink pr-4 pl-3.5 text-[15px] font-bold text-white transition-colors hover:bg-black max-md:size-11 max-md:justify-center max-md:p-0"
+      className={`relative flex h-12 shrink-0 items-center gap-2 overflow-hidden rounded-xl bg-berry pr-3 pl-2 text-left text-white shadow-[0_3px_0_0_var(--color-berry-dark)] transition-colors hover:bg-berry-dark md:h-[54px] md:gap-2.5 md:pr-4 md:pl-2.5 ${
+        lastAdded ? "animate-bump" : ""
+      }`}
     >
-      <ShoppingBag className="size-5" strokeWidth={2} />
-      <span className="hidden md:inline">Varukorg</span>
-      <span
-        className={`grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-[11px] leading-none font-bold tabular-nums max-md:absolute max-md:-top-1 max-md:-right-1 ${
-          count > 0 ? "bg-sun text-ink" : "bg-white/15 text-white/80 max-md:hidden"
-        }`}
-      >
-        {count}
+      <span className="relative shrink-0">
+        <CartonIcon className="size-8 md:size-9" />
+        {count > 0 && (
+          <span className="absolute -top-1.5 -left-1.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-sun px-1 text-[10.5px] leading-none font-extrabold text-ink tabular-nums ring-2 ring-berry">
+            {count}
+          </span>
+        )}
       </span>
+      <span className="flex flex-col leading-none">
+        <span className="flex items-center gap-0.5 text-[11px] font-semibold text-white/85 md:text-[12.5px]">
+          Till kassan <ChevronRight className="size-3.5" strokeWidth={2.6} />
+        </span>
+        <span className={`mt-1 font-display text-[15px] font-bold tabular-nums transition-opacity md:text-[19px] ${hydrated ? "opacity-100" : "opacity-0"}`}>
+          {formatPrice(subtotal)}
+        </span>
+      </span>
+      {count > 0 && (
+        <span className="absolute inset-x-0 bottom-0 h-[3px] bg-white/15" aria-hidden>
+          <span className={`block h-full transition-[width] duration-500 ${pct >= 100 ? "bg-leaf" : "bg-sun"}`} style={{ width: `${pct}%` }} />
+        </span>
+      )}
     </button>
   );
 }
@@ -176,9 +197,10 @@ export function Header() {
           <Logo />
         </div>
         <SearchBox className="mx-auto hidden w-full max-w-2xl md:block" />
-        <div className="ml-auto flex items-center gap-2 md:ml-0">
+        <div className="relative ml-auto flex items-center gap-2 md:ml-0">
           <AccountButtons />
           <CartButton />
+          <AddedToCartPopover />
         </div>
       </div>
       <div className="container-page pb-3 md:hidden">

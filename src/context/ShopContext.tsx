@@ -60,6 +60,9 @@ interface ShopContextValue {
   clearCart: () => void;
   cartOpen: boolean;
   setCartOpen: (open: boolean) => void;
+  /** Senast tillagda produkt, visas i rutan under varukorgsknappen. */
+  lastAdded: { id: number; articleNo: string; qty: number } | null;
+  dismissLastAdded: () => void;
 
   favorites: string[];
   isFavorite: (articleNo: string) => boolean;
@@ -119,6 +122,8 @@ export function ShopProvider({ children }: { children: ReactNode }) {
   const [cartOpen, setCartOpen] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const toastId = useRef(0);
+  const [lastAdded, setLastAdded] = useState<ShopContextValue["lastAdded"]>(null);
+  const dismissLastAdded = useCallback(() => setLastAdded(null), []);
 
   // Läs sparat läge efter första renderingen. ?reset i adressen nollställer demot.
   useEffect(() => {
@@ -167,16 +172,11 @@ export function ShopProvider({ children }: { children: ReactNode }) {
           : [...s.cart, { articleNo, qty }];
         return { ...s, cart };
       });
-      if (!opts?.silent) {
-        const p = getProduct(articleNo);
-        showToast({
-          message: "Tillagd i varukorgen",
-          detail: p ? `${qty} krt ${p.name}` : undefined,
-          action: "open-cart",
-        });
+      if (!opts?.silent && getProduct(articleNo)) {
+        setLastAdded({ id: ++toastId.current, articleNo, qty });
       }
     },
-    [update, showToast],
+    [update],
   );
 
   const addManyToCart = useCallback(
@@ -293,6 +293,7 @@ export function ShopProvider({ children }: { children: ReactNode }) {
       login: () => update((s) => ({ ...s, loggedIn: true })),
       logout: () => {
         setCartOpen(false);
+        setLastAdded(null);
         update((s) => ({ ...s, loggedIn: false, cart: [] }));
       },
       cart: state.cart,
@@ -303,6 +304,8 @@ export function ShopProvider({ children }: { children: ReactNode }) {
       clearCart,
       cartOpen,
       setCartOpen,
+      lastAdded,
+      dismissLastAdded,
       favorites: state.favorites,
       isFavorite: (a) => state.favorites.includes(a),
       toggleFavorite,
@@ -332,6 +335,8 @@ export function ShopProvider({ children }: { children: ReactNode }) {
       removeFromCart,
       clearCart,
       cartOpen,
+      lastAdded,
+      dismissLastAdded,
       toggleFavorite,
       placeOrder,
       createList,
