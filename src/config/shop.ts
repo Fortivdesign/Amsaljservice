@@ -76,6 +76,8 @@ export const shopConfig = {
   },
 
   /** Erbjudandet i popupen för nya besökare */
+  /** Antal sekunder som rutan "Tillagd i varukorgen" visas innan den försvinner. */
+  cartPopupSeconds: 5,
   welcomeOffer: {
     percent: 10,
     code: "FIESTA10",

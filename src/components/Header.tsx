@@ -36,20 +36,20 @@ function CartButton() {
       aria-label={`Till kassan, ${count} kartonger, ${formatPrice(subtotal)}`}
       data-testid="cart-button"
       data-demo-lock
-      className={`relative flex h-12 shrink-0 items-center gap-2 overflow-hidden rounded-xl bg-berry pr-3 pl-2 text-left text-white shadow-[0_3px_0_0_var(--color-berry-dark)] transition-colors hover:bg-berry-dark md:h-[54px] md:gap-2.5 md:pr-4 md:pl-2.5 ${
+      className={`relative flex h-12 shrink-0 items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-brand to-tangerine pr-3 pl-2 text-left text-white shadow-[0_3px_0_0_var(--color-brand-dark)] transition-[filter] hover:brightness-105 md:h-[54px] md:gap-2.5 md:pr-4 md:pl-2.5 ${
         lastAdded ? "animate-bump" : ""
       }`}
     >
       <span className="relative shrink-0">
         <CartonIcon className="size-8 md:size-9" />
         {count > 0 && (
-          <span className="absolute -top-1.5 -left-1.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-sun px-1 text-[10.5px] leading-none font-extrabold text-ink tabular-nums ring-2 ring-berry">
+          <span className="absolute -top-1.5 -left-1.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-sun px-1 text-[10.5px] leading-none font-extrabold text-ink tabular-nums ring-2 ring-brand">
             {count}
           </span>
         )}
       </span>
       <span className="flex flex-col leading-none">
-        <span className="flex items-center gap-0.5 text-[11px] font-semibold text-white/85 md:text-[12.5px]">
+        <span className="flex items-center gap-0.5 text-[11px] font-semibold text-white/90 md:text-[12.5px]">
           Till kassan <ChevronRight className="size-3.5" strokeWidth={2.6} />
         </span>
         <span className={`mt-1 font-display text-[15px] font-bold tabular-nums transition-opacity md:text-[19px] ${hydrated ? "opacity-100" : "opacity-0"}`}>
@@ -57,8 +57,8 @@ function CartButton() {
         </span>
       </span>
       {count > 0 && (
-        <span className="absolute inset-x-0 bottom-0 h-[3px] bg-white/15" aria-hidden>
-          <span className={`block h-full transition-[width] duration-500 ${pct >= 100 ? "bg-leaf" : "bg-sun"}`} style={{ width: `${pct}%` }} />
+        <span className="absolute inset-x-0 bottom-0 h-[3px] bg-black/15" aria-hidden>
+          <span className={`block h-full transition-[width] duration-500 ${pct >= 100 ? "bg-leaf" : "bg-white"}`} style={{ width: `${pct}%` }} />
         </span>
       )}
     </button>

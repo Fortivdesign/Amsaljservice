@@ -11,7 +11,7 @@ import { formatAmount, formatPrice } from "@/lib/format";
 import { cartSubtotal, remainingForFreeShipping } from "@/lib/order";
 import { ProductImage } from "./ProductImage";
 
-const SHOW_MS = 7000;
+const SHOW_MS = shopConfig.cartPopupSeconds * 1000;
 
 function pctOf(amount: number) {
   return Math.min(100, Math.max(0, (amount / shopConfig.freeShippingThreshold) * 100));
@@ -71,8 +71,6 @@ export function AddedToCartPopover() {
       role="status"
       aria-live="polite"
       data-testid="added-to-cart"
-      onMouseEnter={() => window.clearTimeout(timer.current)}
-      onMouseLeave={() => startTimer(2500)}
       className="animate-pop-in absolute top-full right-0 z-50 mt-3 w-[min(400px,calc(100vw-2rem))] origin-top-right rounded-3xl border-2 border-ink bg-white p-4 text-ink shadow-pop"
     >
       <span className="absolute -top-[9px] right-9 size-4 rotate-45 border-t-2 border-l-2 border-ink bg-white" aria-hidden />
@@ -137,10 +135,19 @@ export function AddedToCartPopover() {
         >
           Visa varukorg
         </button>
-        <Link href="/kassa" onClick={dismissLastAdded} className="btn btn-primary h-11" data-testid="popover-checkout">
+        <Link
+          href="/kassa"
+          onClick={dismissLastAdded}
+          className="btn h-11 bg-gradient-to-r from-brand to-tangerine text-white shadow-[0_3px_0_0_var(--color-brand-dark)] hover:brightness-105"
+          data-testid="popover-checkout"
+        >
           Till kassan
         </Link>
       </div>
+
+      <span className="absolute inset-x-6 bottom-1.5 h-1 overflow-hidden rounded-full bg-line" aria-hidden>
+        <span className="animate-countdown block h-full origin-left rounded-full bg-gradient-to-r from-brand to-tangerine" style={{ animationDuration: `${SHOW_MS}ms` }} />
+      </span>
     </div>
   );
 }

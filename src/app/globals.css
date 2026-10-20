@@ -21,8 +21,6 @@
   --color-brand-200: color-mix(in oklab, var(--brand) 28%, white);
 
   /* Fiesta-paletten */
-  --color-berry: #8f1239;
-  --color-berry-dark: #6e0c2b;
   --color-sun: #ffc23d;
   --color-sun-light: #fff1c9;
   --color-tangerine: #f26a21;
@@ -250,6 +248,17 @@
   65% {
     transform: scale(0.97);
   }
+}
+@keyframes countdown {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+.animate-countdown {
+  animation: countdown linear both;
 }
 .animate-bump {
   animation: bump 480ms cubic-bezier(0.22, 1, 0.36, 1);

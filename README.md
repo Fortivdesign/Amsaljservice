@@ -31,7 +31,7 @@ Priser syns bara för inloggade. Utloggade ser "Logga in för att se pris" och h
 
 - **Rabattruta:** efter 12 sekunder, eller när muspekaren lämnar fönstret uppåt, visas "Spara 10 % på första ordern". Den visas en gång per besök och aldrig på bli kund, logga in eller i kassan. Inloggade får i stället veckans deal.
 - **Sökknuff:** söker man på något som har en kampanj (till exempel "goya" eller "arizona") dyker en ruta upp med rabatten. Ger två sökningar inga träffar visas en ruta med telefonnummer till kundservice.
-- **Varukorgen:** knappen uppe till höger visar "Till kassan" och summan, med en tunn mätare mot fri frakt. När man lägger i en produkt fälls en ruta ut med produkten och hur mycket som är kvar till fri frakt, och toppraden byter "Fri frakt över 3 000 kr" mot till exempel "1 328 kr kvar till fri frakt".
+- **Varukorgen:** knappen uppe till höger visar "Till kassan" och summan, med en tunn mätare mot fri frakt. När man lägger i en produkt fälls en ruta ut med produkten och hur mycket som är kvar till fri frakt. Rutan försvinner efter 5 sekunder (`cartPopupSeconds` i `src/config/shop.ts`), och toppraden byter "Fri frakt över 3 000 kr" mot till exempel "1 328 kr kvar till fri frakt".
 - **Mobil:** utloggade har en fast list längst ner med "Logga in" och "Bli kund, spara 10 %".
 
 För att visa rabattrutan direkt i ett möte: öppna http://localhost:3000/?popup=visa. `?popup=av` stänger av den i webbläsaren och `?popup=pa` slår på den igen.
